@@ -1,0 +1,36 @@
+{
+    "name": "ganesha-plugin/couchbase-adapter",
+    "description": "Couchbase adapter for ackintosh/ganesha",
+    "type": "library",
+    "require": {
+        "php": ">=5.6",
+        "ext-couchbase": "^2.4",
+        "ackintosh/ganesha": "^0.2.0"
+    },
+    "require-dev": {
+        "phpmd/phpmd": "^2.6",
+        "phpunit/phpunit": "^4.8|^5.7|^6.5|^7.1",
+        "sebastian/phpcpd": "^2.0|^3.0|^4.0",
+        "squizlabs/php_codesniffer": "^2.9|^3.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "xKerman",
+            "email": "xKhorasan@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "GaneshaPlugin\\": "src/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpcs",
+            "phpmd src/ text ./phpmd.xml",
+            "phpcpd src/",
+            "phpdbg -qrr ./vendor/bin/phpunit"
+        ]
+    }
+}
