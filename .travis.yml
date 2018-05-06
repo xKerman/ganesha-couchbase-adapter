@@ -1,0 +1,29 @@
+language: php
+
+sudo: required
+
+services:
+  - docker
+
+php:
+  - '7.2'
+
+before_install:
+  # start couchbase server
+  - make start
+  # install couchbase SDK
+  - curl -O http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-4-amd64.deb
+  - sudo dpkg -i couchbase-release-1.0-4-amd64.deb
+  - sudo apt-get update
+  - sudo apt-get install -y libcouchbase-dev build-essential zlib1g-dev
+  - pecl install couchbase
+
+install:
+  - rm composer.lock
+  - composer install --no-interaction
+
+script:
+  - composer test
+
+after_script:
+  - ./bin/couchbase-server -k
