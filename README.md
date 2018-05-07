@@ -1,5 +1,7 @@
 # ganesha-plugin/couchbase-adapter
 
+[![Build Status](https://travis-ci.org/xKerman/ganesha-couchbase-adapter.svg?branch=master)](https://travis-ci.org/xKerman/ganesha-couchbase-adapter)
+
 This package provides Couchbase adapter for [ackintosh/ganesha](https://packagist.org/packages/ackintosh/ganesha).
 
 
@@ -31,8 +33,8 @@ $ganesha = \Ackintosh\Ganesha\Builder::build([
 to run unit test:
 
 ```
-$ make start    # start couchbase server in docker container
-$ composer test # run unit test
+$ make start                                  # start couchbase server in docker container
+$ TEST_COUCHBASE_HOST=localhost composer test # run unit test
 ```
 
 ## License
