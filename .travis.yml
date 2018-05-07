@@ -33,6 +33,3 @@ before_script:
 
 script:
   - composer test
-
-after_script:
-  - ./bin/couchbase-server -k
