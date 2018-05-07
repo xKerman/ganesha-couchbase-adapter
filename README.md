@@ -1,5 +1,7 @@
 # ganesha-plugin/couchbase-adapter
 
+[![Build Status](https://travis-ci.org/xKerman/ganesha-couchbase-adapter.svg?branch=master)](https://travis-ci.org/xKerman/ganesha-couchbase-adapter)
+
 This package provides Couchbase adapter for [ackintosh/ganesha](https://packagist.org/packages/ackintosh/ganesha).
 
 
