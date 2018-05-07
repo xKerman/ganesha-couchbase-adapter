@@ -8,6 +8,9 @@ services:
 php:
   - '7.2'
 
+env:
+  - TEST_COUCHBASE_HOST: 127.0.0.1
+
 before_install:
   # start couchbase server
   - make start
