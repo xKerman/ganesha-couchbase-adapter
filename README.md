@@ -31,8 +31,8 @@ $ganesha = \Ackintosh\Ganesha\Builder::build([
 to run unit test:
 
 ```
-$ make start    # start couchbase server in docker container
-$ composer test # run unit test
+$ make start                                  # start couchbase server in docker container
+$ TEST_COUCHBASE_HOST=localhost composer test # run unit test
 ```
 
 ## License

@@ -18,7 +18,8 @@ class CouchbaseAdapterTest extends TestCase
 {
     private function createBucket()
     {
-        $cluster = new Cluster('couchbase://192.168.99.100');
+        $host = getenv('TEST_COUCHBASE_HOST');
+        $cluster = new Cluster('couchbase://' . $host);
         $auth = new PasswordAuthenticator();
         $auth->username('rusername')->password('rpassword');
         $cluster->authenticate($auth);
