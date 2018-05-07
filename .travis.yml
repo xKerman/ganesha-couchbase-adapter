@@ -28,6 +28,9 @@ install:
   - rm composer.lock
   - composer install --no-interaction
 
+before_script:
+  - command -v phpdbg > /dev/null || sed -i -e 's/phpdbg -qrr //g' composer.json
+
 script:
   - composer test
 
