@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/xKerman/ganesha-couchbase-adapter.svg?branch=master)](https://travis-ci.org/xKerman/ganesha-couchbase-adapter)
 [![codecov](https://codecov.io/gh/xKerman/ganesha-couchbase-adapter/branch/master/graph/badge.svg)](https://codecov.io/gh/xKerman/ganesha-couchbase-adapter)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/xKerman/ganesha-couchbase-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/xKerman/ganesha-couchbase-adapter/?branch=master)
 
 This package provides Couchbase adapter for [ackintosh/ganesha](https://packagist.org/packages/ackintosh/ganesha).
 
