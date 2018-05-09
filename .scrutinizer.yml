@@ -25,7 +25,8 @@ build:
 
   tests:
     override:
-      - command: TEST_COUCHBASE_HOST=$DOCKER_IP composer run
+      -
+        command: TEST_COUCHBASE_HOST=$DOCKER_IP composer run
         coverage:
           file: report/coverage/clover.xml
-          format: php-clover
+          format: clover
