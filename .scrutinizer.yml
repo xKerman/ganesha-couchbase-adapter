@@ -19,3 +19,6 @@ build:
       - sudo apt-get update
       - sudo apt-get install -y libcouchbase-dev build-essential zlib1g-dev
       - pecl install couchbase
+
+tools:
+  external_code_coverage: true
