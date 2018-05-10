@@ -57,15 +57,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function load($service)
     {
-        try {
-            $doc = $this->bucket->get($service, []);
-        } catch (CBException $e) {
-            if ($e->getCode() === COUCHBASE_KEY_ENOENT) {
-                return 0;
-            }
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
-        return $doc->value;
+        return $this->get($service, 0);
     }
 
     /**
@@ -145,15 +137,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function loadLastFailureTime($service)
     {
-        try {
-            $doc = $this->bucket->get($service, []);
-        } catch (CBException $e) {
-            if ($e->getCode() === COUCHBASE_KEY_ENOENT) {
-                return null;
-            }
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
-        return $doc->value;
+        return $this->get($service, null);
     }
 
     /**
@@ -182,15 +166,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function loadStatus($service)
     {
-        try {
-            $doc = $this->bucket->get($service, []);
-        } catch (CBException $e) {
-            if ($e->getCode() === COUCHBASE_KEY_ENOENT) {
-                return Ganesha::STATUS_CALMED_DOWN;
-            }
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
-        return $doc->value;
+        return $this->get($service, Ganesha::STATUS_CALMED_DOWN);
     }
 
     /**
@@ -219,5 +195,26 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
             'expiry' => $expiry,
         ];
         return array_merge($initial, $additional);
+    }
+
+    /**
+     * get data from couchbase bucket
+     *
+     * @param string $key     key of the document
+     * @param mixed  $default default value for missing document
+     * @return mixed
+     * @throws \Ackintosh\Ganesha\Exception\Storage\Exception
+     */
+    private function get($key, $default)
+    {
+        try {
+            $doc = $this->bucket->get($key, []);
+        } catch (CBException $e) {
+            if ($e->getCode() === COUCHBASE_KEY_ENOENT) {
+                return $default;
+            }
+            throw new StorageException($e->getMessage(), $e->getCode(), $e);
+        }
+        return $doc->value;
     }
 }
