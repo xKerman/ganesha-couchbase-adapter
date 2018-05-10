@@ -1,7 +1,7 @@
 {
     "name": "ganesha-plugin/couchbase-adapter",
     "description": "Couchbase adapter for ackintosh/ganesha",
-    "keywords": ["circuit breaker", "ackintosh/ganesha"],
+    "keywords": ["circuit breaker"],
     "type": "library",
     "require": {
         "php": ">=5.6",
