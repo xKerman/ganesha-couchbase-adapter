@@ -18,12 +18,12 @@ use Couchbase\Exception as CBException;
 class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
 {
     /**
-     * @var \Couchbase\Bucket $bucket
+     * @var \Couchbase\Bucket $bucket Couchbase bucket to manage data
      */
     private $bucket;
 
     /**
-     * @var \Ackintosh\Ganesha\Configuration $configuration
+     * @var \Ackintosh\Ganesha\Configuration $configuration circuit breaker configuration
      */
     private $configuration;
 
@@ -38,7 +38,8 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     }
 
     /**
-     * @override
+     * set circuit breaker configuration
+     *
      * @param \Ackintosh\Ganesha\Configuration $configuration circuit breaker configuration
      * @return void
      */
@@ -48,24 +49,20 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     }
 
     /**
+     * load success / failure / rejection count
+     *
      * @param  string $service name of the service
      * @return int
      * @throws \Ackintosh\Ganesha\Exception\StorageException
      */
     public function load($service)
     {
-        try {
-            $doc = $this->bucket->get($service, []);
-        } catch (CBException $e) {
-            if ($e->getCode() === COUCHBASE_KEY_ENOENT) {
-                return 0;
-            }
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
-        return $doc->value;
+        return $this->get($service, 0);
     }
 
     /**
+     * save success / failure / rejection count
+     *
      * @param  string $service name of the service
      * @param  int    $count   success / failure / rejection count of the service
      * @return void
@@ -73,25 +70,19 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function save($service, $count)
     {
-        try {
-            $this->bucket->upsert($service, $count, $this->getOptions());
-        } catch (CBException $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->upsert($service, $count);
     }
 
     /**
+     * increment success / failure / rejection count
+     *
      * @param  string $service name of the service
      * @return void
      * @throws \Ackintosh\Ganesha\Exception\StorageException
      */
     public function increment($service)
     {
-        try {
-            $this->bucket->counter($service, 1, $this->getOptions(['initial' => 0]));
-        } catch (\Couchbase\Exception $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->counter($service, 1);
     }
 
     /**
@@ -105,11 +96,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function decrement($service)
     {
-        try {
-            $this->bucket->counter($service, -1, $this->getOptions(['initial' => 0]));
-        } catch (\Couchbase\Exception $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->counter($service, -1);
     }
 
     /**
@@ -122,11 +109,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function saveLastFailureTime($service, $lastFailureTime)
     {
-        try {
-            $this->bucket->upsert($service, $lastFailureTime, $this->getOptions());
-        } catch (CBException $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->upsert($service, $lastFailureTime);
     }
 
     /**
@@ -138,15 +121,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function loadLastFailureTime($service)
     {
-        try {
-            $doc = $this->bucket->get($service, []);
-        } catch (CBException $e) {
-            if ($e->getCode() === COUCHBASE_KEY_ENOENT) {
-                return null;
-            }
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
-        return $doc->value;
+        return $this->get($service, null);
     }
 
     /**
@@ -159,11 +134,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function saveStatus($service, $status)
     {
-        try {
-            $this->bucket->upsert($service, $status, $this->getOptions());
-        } catch (CBException $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->upsert($service, $status);
     }
 
     /**
@@ -175,15 +146,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function loadStatus($service)
     {
-        try {
-            $doc = $this->bucket->get($service, []);
-        } catch (CBException $e) {
-            if ($e->getCode() === COUCHBASE_KEY_ENOENT) {
-                return Ganesha::STATUS_CALMED_DOWN;
-            }
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
-        return $doc->value;
+        return $this->get($service, Ganesha::STATUS_CALMED_DOWN);
     }
 
     /**
@@ -212,5 +175,60 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
             'expiry' => $expiry,
         ];
         return array_merge($initial, $additional);
+    }
+
+    /**
+     * get data from couchbase bucket
+     *
+     * @param string $key     key of the document
+     * @param mixed  $default default value for missing document
+     * @return mixed
+     * @throws \Ackintosh\Ganesha\Exception\StorageException
+     */
+    private function get($key, $default)
+    {
+        try {
+            $doc = $this->bucket->get($key, []);
+        } catch (CBException $e) {
+            if ($e->getCode() === COUCHBASE_KEY_ENOENT) {
+                return $default;
+            }
+            throw new StorageException($e->getMessage(), $e->getCode(), $e);
+        }
+        return $doc->value;
+    }
+
+    /**
+     * update or insert value for given key
+     *
+     * @param string $key   id of the document
+     * @param mixed  $value value of the document
+     * @return void
+     * @throws \Ackintosh\Ganesha\Exception\StorageException
+     */
+    private function upsert($key, $value)
+    {
+        try {
+            $this->bucket->upsert($key, $value, $this->getOptions());
+        } catch (CBException $e) {
+            throw new StorageException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * increment / decrement counter for given key
+     *
+     * @param string $key   key of the counter
+     * @param int    $delta increment / decrement delta
+     * @return void
+     * @throws \Ackintosh\Ganesha\Exception\StorageException
+     */
+    private function counter($key, $delta)
+    {
+        try {
+            $this->bucket->counter($key, $delta, $this->getOptions(['initial' => 0]));
+        } catch (\Couchbase\Exception $e) {
+            throw new StorageException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

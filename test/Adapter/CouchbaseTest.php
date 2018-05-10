@@ -74,6 +74,7 @@ class CouchbaseAdapterTest extends TestCase
 
     /**
      * @covers ::load
+     * @covers ::<private>
      */
     public function testLoadFirst()
     {
@@ -107,6 +108,7 @@ class CouchbaseAdapterTest extends TestCase
     /**
      * @expectedException \Ackintosh\Ganesha\Exception\StorageException
      * @covers ::load
+     * @covers ::<private>
      */
     public function testLoadWithException()
     {
@@ -133,6 +135,7 @@ class CouchbaseAdapterTest extends TestCase
 
     /**
      * @covers ::increment
+     * @covers ::<private>
      */
     public function testIncrementSuccess()
     {
@@ -152,6 +155,7 @@ class CouchbaseAdapterTest extends TestCase
     /**
      * @expectedException \Ackintosh\Ganesha\Exception\StorageException
      * @covers ::increment
+     * @covers ::<private>
      */
     public function testIncrementWithException()
     {
@@ -201,6 +205,7 @@ class CouchbaseAdapterTest extends TestCase
 
     /**
      * @covers ::loadLastFailureTime
+     * @covers ::<private>
      */
     public function testLoadLastFailureTimeFirstTime()
     {
@@ -234,6 +239,7 @@ class CouchbaseAdapterTest extends TestCase
     /**
      * @expectedException \Ackintosh\Ganesha\Exception\StorageException
      * @covers ::loadLastFailureTime
+     * @covers ::<private>
      */
     public function testLoadLastFailureTimeWithException()
     {
@@ -260,6 +266,7 @@ class CouchbaseAdapterTest extends TestCase
 
     /**
      * @covers ::loadStatus
+     * @covers ::<private>
      */
     public function testLoadStatusFirstTime()
     {
@@ -292,6 +299,7 @@ class CouchbaseAdapterTest extends TestCase
     /**
      * @expectedException \Ackintosh\Ganesha\Exception\StorageException
      * @covers ::loadStatus
+     * @covers ::<private>
      */
     public function testLoadStatusWithException()
     {

@@ -12,3 +12,7 @@ start:
 stop:
 	docker stop $(container_name)
 	docker rm $(container_name)
+
+doc: src/Adapter/*.php
+	if [ ! -f phpDocumentor.phar ]; then curl -L -o phpDocumentor.phar http://phpdoc.org/phpDocumentor.phar; fi
+	php phpDocumentor.phar run -d src/ -t doc/
