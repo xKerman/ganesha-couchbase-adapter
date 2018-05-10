@@ -183,7 +183,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      * @param string $key     key of the document
      * @param mixed  $default default value for missing document
      * @return mixed
-     * @throws \Ackintosh\Ganesha\Exception\Storage\Exception
+     * @throws \Ackintosh\Ganesha\Exception\StorageException
      */
     private function get($key, $default)
     {
@@ -204,7 +204,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      * @param string $key   id of the document
      * @param mixed  $value value of the document
      * @return void
-     * @throws \Ackintosh\Ganesha\Exception\Storage\Exception
+     * @throws \Ackintosh\Ganesha\Exception\StorageException
      */
     private function upsert($key, $value)
     {
@@ -221,7 +221,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      * @param string $key   key of the counter
      * @param int    $delta increment / decrement delta
      * @return void
-     * @throws \Ackintosh\Ganesha\Exception\Storage\Exception
+     * @throws \Ackintosh\Ganesha\Exception\StorageException
      */
     private function counter($key, $delta)
     {
