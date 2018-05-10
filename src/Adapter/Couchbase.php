@@ -18,12 +18,12 @@ use Couchbase\Exception as CBException;
 class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
 {
     /**
-     * @var \Couchbase\Bucket $bucket
+     * @var \Couchbase\Bucket $bucket Couchbase bucket to manage data
      */
     private $bucket;
 
     /**
-     * @var \Ackintosh\Ganesha\Configuration $configuration
+     * @var \Ackintosh\Ganesha\Configuration $configuration circuit breaker configuration
      */
     private $configuration;
 
@@ -38,7 +38,8 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     }
 
     /**
-     * @override
+     * set circuit breaker configuration
+     *
      * @param \Ackintosh\Ganesha\Configuration $configuration circuit breaker configuration
      * @return void
      */
@@ -48,6 +49,8 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     }
 
     /**
+     * load success / failure / rejection count
+     *
      * @param  string $service name of the service
      * @return int
      * @throws \Ackintosh\Ganesha\Exception\StorageException
@@ -66,6 +69,8 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     }
 
     /**
+     * save success / failure / rejection count
+     *
      * @param  string $service name of the service
      * @param  int    $count   success / failure / rejection count of the service
      * @return void
@@ -81,6 +86,8 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     }
 
     /**
+     * increment success / failure / rejection count
+     *
      * @param  string $service name of the service
      * @return void
      * @throws \Ackintosh\Ganesha\Exception\StorageException
