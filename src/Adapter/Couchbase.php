@@ -70,11 +70,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function save($service, $count)
     {
-        try {
-            $this->bucket->upsert($service, $count, $this->getOptions());
-        } catch (CBException $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->upsert($service, $count);
     }
 
     /**
@@ -86,11 +82,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function increment($service)
     {
-        try {
-            $this->bucket->counter($service, 1, $this->getOptions(['initial' => 0]));
-        } catch (\Couchbase\Exception $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->counter($service, 1);
     }
 
     /**
@@ -104,11 +96,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function decrement($service)
     {
-        try {
-            $this->bucket->counter($service, -1, $this->getOptions(['initial' => 0]));
-        } catch (\Couchbase\Exception $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->counter($service, -1);
     }
 
     /**
@@ -121,11 +109,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function saveLastFailureTime($service, $lastFailureTime)
     {
-        try {
-            $this->bucket->upsert($service, $lastFailureTime, $this->getOptions());
-        } catch (CBException $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->upsert($service, $lastFailureTime);
     }
 
     /**
@@ -150,11 +134,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function saveStatus($service, $status)
     {
-        try {
-            $this->bucket->upsert($service, $status, $this->getOptions());
-        } catch (CBException $e) {
-            throw new StorageException($e->getMessage(), $e->getCode(), $e);
-        }
+        $this->upsert($service, $status);
     }
 
     /**
@@ -216,5 +196,39 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
             throw new StorageException($e->getMessage(), $e->getCode(), $e);
         }
         return $doc->value;
+    }
+
+    /**
+     * update or insert value for given key
+     *
+     * @param string $key   id of the document
+     * @param mixed  $value value of the document
+     * @return void
+     * @throws \Ackintosh\Ganesha\Exception\Storage\Exception
+     */
+    private function upsert($key, $value)
+    {
+        try {
+            $this->bucket->upsert($key, $value, $this->getOptions());
+        } catch (CBException $e) {
+            throw new StorageException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * increment / decrement counter for given key
+     *
+     * @param string $key   key of the counter
+     * @param int    $delta increment / decrement delta
+     * @return void
+     * @throws \Ackintosh\Ganesha\Exception\Storage\Exception
+     */
+    private function counter($key, $delta)
+    {
+        try {
+            $this->bucket->counter($key, $delta, $this->getOptions(['initial' => 0]));
+        } catch (\Couchbase\Exception $e) {
+            throw new StorageException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

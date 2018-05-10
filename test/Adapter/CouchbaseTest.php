@@ -135,6 +135,7 @@ class CouchbaseAdapterTest extends TestCase
 
     /**
      * @covers ::increment
+     * @covers ::<private>
      */
     public function testIncrementSuccess()
     {
@@ -154,6 +155,7 @@ class CouchbaseAdapterTest extends TestCase
     /**
      * @expectedException \Ackintosh\Ganesha\Exception\StorageException
      * @covers ::increment
+     * @covers ::<private>
      */
     public function testIncrementWithException()
     {
