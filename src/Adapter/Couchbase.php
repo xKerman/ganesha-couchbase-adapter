@@ -4,6 +4,8 @@
  */
 namespace GaneshaPlugin\Adapter;
 
+use RuntimeException;
+
 use Ackintosh\Ganesha;
 use Ackintosh\Ganesha\Exception\StorageException;
 use Ackintosh\Ganesha\Configuration;
@@ -14,6 +16,8 @@ use Couchbase\Exception as CBException;
 
 /**
  * Adapter class using Couchbase
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
 {
@@ -35,6 +39,26 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     public function __construct(Bucket $bucket)
     {
         $this->bucket = $bucket;
+    }
+
+    /**
+     * return wwhether the adapter supports counting strategy
+     *
+     * @return bool
+     */
+    public function supportCountStrategy()
+    {
+        return true;
+    }
+
+    /**
+     * return whether the adapter supports rating strategy
+     *
+     * @return bool
+     */
+    public function supportRateStrategy()
+    {
+        return true;
     }
 
     /**
@@ -157,7 +181,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function reset()
     {
-        throw new \RuntimeException('not implemented');
+        throw new RuntimeException('not implemented');
     }
 
     /**
