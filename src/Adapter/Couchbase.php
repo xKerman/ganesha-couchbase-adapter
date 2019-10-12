@@ -40,6 +40,26 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     }
 
     /**
+     * return wwhether the adapter supports counting strategy
+     *
+     * @rrturn bool
+     */
+    public function supportCountStrategy()
+    {
+        return true;
+    }
+
+    /**
+     * return whether the adapter supports rating strategy
+     *
+     * @return bool
+     */
+    public function supportRateStrategy()
+    {
+        return true;
+    }
+
+    /**
      * set circuit breaker configuration
      *
      * @param \Ackintosh\Ganesha\Configuration $configuration circuit breaker configuration
