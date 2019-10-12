@@ -4,6 +4,8 @@
  */
 namespace GaneshaPlugin\Adapter;
 
+use RuntimeException;
+
 use Ackintosh\Ganesha;
 use Ackintosh\Ganesha\Exception\StorageException;
 use Ackintosh\Ganesha\Configuration;
@@ -157,7 +159,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
      */
     public function reset()
     {
-        throw new \RuntimeException('not implemented');
+        throw new RuntimeException('not implemented');
     }
 
     /**
