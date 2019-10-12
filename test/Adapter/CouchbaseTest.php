@@ -61,6 +61,28 @@ class CouchbaseAdapterTest extends TestCase
     }
 
     /**
+     * @covers ::supportCountStrategy
+     */
+    public function tsetSupportCountStrategy()
+    {
+        $bucket = $this->createBucket();
+        $adapter = new Couchbase($bucket);
+
+        $this->assertTrue($adapter->supportCountStrategy());
+    }
+
+    /**
+     * @covers ::supportRateStrategy
+     */
+    public function tsetSupportRateStrategy()
+    {
+        $bucket = $this->createBucket();
+        $adapter = new Couchbase($bucket);
+
+        $this->assertTrue($adapter->supportRateStrategy());
+    }
+
+    /**
      * @covers ::setConfiguration
      */
     public function testSetConfiguration()
