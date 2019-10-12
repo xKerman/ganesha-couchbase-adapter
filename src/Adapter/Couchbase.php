@@ -16,6 +16,8 @@ use Couchbase\Exception as CBException;
 
 /**
  * Adapter class using Couchbase
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
 {
