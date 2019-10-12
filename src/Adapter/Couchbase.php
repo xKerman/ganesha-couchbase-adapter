@@ -42,7 +42,7 @@ class Couchbase implements AdapterInterface, TumblingTimeWindowInterface
     /**
      * return wwhether the adapter supports counting strategy
      *
-     * @rrturn bool
+     * @return bool
      */
     public function supportCountStrategy()
     {
